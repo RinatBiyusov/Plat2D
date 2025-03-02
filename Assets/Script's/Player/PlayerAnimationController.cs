@@ -5,6 +5,9 @@ public class PlayerAnimationController : MonoBehaviour
     [SerializeField] private Animator _animator;
 
     private readonly int _run = Animator.StringToHash("Run");
+    private readonly int _attack = Animator.StringToHash("Attack");
+
+    public float DurationAttackAnimation { get; private set; }
 
     private void Awake()
     {
@@ -18,4 +21,6 @@ public class PlayerAnimationController : MonoBehaviour
         else
             _animator.SetBool(_run, false);
     }
+
+    public void TriggerAttack() => _animator.SetTrigger(_attack);
 }

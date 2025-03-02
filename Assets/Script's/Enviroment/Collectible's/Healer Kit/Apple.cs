@@ -2,12 +2,14 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource), typeof(SpriteRenderer), typeof(Collider2D))]
-public class Coin : MonoBehaviour
+public class Apple : MonoBehaviour
 {
     private AudioSource _pickUpSound;
     private WaitForSeconds _delay;
     private SpriteRenderer _render;
     private Collider2D _collider;
+
+    public int AmountHealing { get; private set; } = 1;
 
     private void Awake()
     {
