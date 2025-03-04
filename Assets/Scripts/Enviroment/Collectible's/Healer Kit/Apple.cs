@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource), typeof(SpriteRenderer), typeof(Collider2D))]
-public class Apple : MonoBehaviour
+public class Apple : Collectable
 {
     private AudioSource _pickUpSound;
     private WaitForSeconds _delay;

@@ -6,8 +6,6 @@ public class Monster : MonoBehaviour
     [Range(1, 5)][SerializeField] private int _healthPoints;
     [SerializeField] private float _strengthKnockback = 10f;
 
-    private Collider2D _hitBoxBody;
-
     public void TakeDamage(int receivedDamage)
     {
         if (receivedDamage >= _healthPoints)
@@ -38,8 +36,6 @@ public class Monster : MonoBehaviour
         Vector2 directionKnockback = player.transform.position - transform.position;
         directionKnockback.y = 0;
         directionKnockback.Normalize();
-
-        Debug.Log(directionKnockback);
 
         rigidbodyPlayer.AddForce(directionKnockback * _strengthKnockback, ForceMode2D.Impulse);
     }

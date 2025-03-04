@@ -75,8 +75,6 @@ public class PlayerAttack : MonoBehaviour
         directionKnockback.y = 0;
         directionKnockback.Normalize();
 
-        Debug.Log(directionKnockback);
-
         enemy.AddForce(directionKnockback * _strengthKnockback, ForceMode2D.Impulse);
     }
 

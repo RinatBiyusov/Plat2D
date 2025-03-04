@@ -1,16 +1,15 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerDectection))]
 public class EnemyMover : MonoBehaviour
 {
-    private readonly Quaternion _lookRight = Quaternion.identity;
-    private readonly Quaternion _lookLeft = Quaternion.Euler(0, 180, 0);
-
     [SerializeField] private List<Waypoint> _waypoints;
     [SerializeField] private float _speed = 3f;
     [SerializeField] private float _chasingSpeed = 5f;
+
+    private readonly Quaternion _lookRight = Quaternion.identity;
+    private readonly Quaternion _lookLeft = Quaternion.Euler(0, 180, 0);
 
     private PlayerDectection _detector;
     private int _currentWaypoint = 0;
@@ -51,7 +50,7 @@ public class EnemyMover : MonoBehaviour
 
     private void Patrol()
     {
-        if (Vector2.SqrMagnitude(_waypoints[_currentWaypoint].Position - transform.position) < _distanceInaccuracy)
+        if (Vector2.SqrMagnitude(_waypoints[_currentWaypoint].Position - transform.position) < _distanceInaccuracy * _distanceInaccuracy)
             _currentWaypoint = (_currentWaypoint + 1) % _waypoints.Count;
 
         transform.position = Vector2.MoveTowards(transform.position, _waypoints[_currentWaypoint].Position, Time.deltaTime * _speed);
