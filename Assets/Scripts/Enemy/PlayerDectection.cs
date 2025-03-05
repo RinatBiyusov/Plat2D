@@ -4,7 +4,6 @@ using UnityEngine;
 public class PlayerDectection : MonoBehaviour
 {
     [SerializeField] private float _detectionDistance = 5f;
-    [SerializeField] private float _checkRate = 0.1f;
     [SerializeField] private LayerMask _obstacleLayer;
 
     public bool IsPlayerDetected { get; private set; } = false;
