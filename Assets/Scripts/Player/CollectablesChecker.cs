@@ -31,8 +31,8 @@ public class CollectablesChecker : MonoBehaviour
         }
         else if (collectable.TryGetComponent(out Apple apple))
         {
-            _player.TryHeal(apple.AmountHealing);
-            apple.Dispose();
+            if (_player.TryHeal(apple.AmountHealing))
+                apple.Dispose();
         }
     }
 }

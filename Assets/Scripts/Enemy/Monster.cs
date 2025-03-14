@@ -1,42 +1,54 @@
 using UnityEngine;
 
-public class Monster : MonoBehaviour
+namespace Enemy
 {
-    [Range(1, 3)][SerializeField] private int _damage;
-    [Range(1, 5)][SerializeField] private int _healthPoints;
-    [SerializeField] private float _strengthKnockback = 10f;
-
-    public void TakeDamage(int receivedDamage)
+    public class Monster : MonoBehaviour
     {
-        if (receivedDamage >= _healthPoints)
+        [Range(1, 3)] [SerializeField] private int _damage;
+        [SerializeField] private float _strengthKnockback = 10f;
+
+        private Health _health;
+
+        private void Awake()
         {
-            _healthPoints = 0;
-            gameObject.SetActive(false);
+            _health = GetComponent<Health>();
         }
-        else
-            _healthPoints -= receivedDamage;
-    }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.TryGetComponent(out Player player))
+        private void OnEnable()
         {
-            player.TakeDamage(_damage);
-            ApplyKnock(player.transform);
+            _health.Died += OnDying;
         }
-    }
 
-    private void ApplyKnock(Transform player)
-    {
-        if (player == null)
-            return;
+        private void OnDisable()
+        {
+            _health.Died -= OnDying;
+        }
 
-        Rigidbody2D rigidbodyPlayer = player.GetComponent<Rigidbody2D>();
+        private void OnDying() => gameObject.SetActive(false);
+    
+        public void TakeDamage(int receivedDamage) => _health.TakeDamage(receivedDamage);
 
-        Vector2 directionKnockback = player.transform.position - transform.position;
-        directionKnockback.y = 0;
-        directionKnockback.Normalize();
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (collision.gameObject.TryGetComponent(out Player player))
+            {
+                player.TakeDamage(_damage);
+                ApplyKnock(player.transform);
+            }
+        }
 
-        rigidbodyPlayer.AddForce(directionKnockback * _strengthKnockback, ForceMode2D.Impulse);
+        private void ApplyKnock(Transform player)
+        {
+            if (player == null)
+                return;
+
+            Rigidbody2D rigidbodyPlayer = player.GetComponent<Rigidbody2D>();
+
+            Vector2 directionKnockback = player.transform.position - transform.position;
+            directionKnockback.y = 0;
+            directionKnockback.Normalize();
+
+            rigidbodyPlayer.AddForce(directionKnockback * _strengthKnockback, ForceMode2D.Impulse);
+        }
     }
 }

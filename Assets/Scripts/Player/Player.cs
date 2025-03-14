@@ -1,34 +1,48 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Collectable))]
+[RequireComponent(typeof(Health))]
 public class Player : MonoBehaviour
 {
-    [SerializeField] private int _maxHealth = 5;
+    [SerializeField] private float _invincibilityTime;
 
+    private Health _health;
     private int _coinBag;
-    private int _currentHealthPoints;
-
-    private void Start()
+    private float _invincibilityEndTime;
+    
+    private void Awake()
     {
-        _currentHealthPoints = _maxHealth;
+        _health = GetComponent<Health>();
     }
 
-    public void TakeDamage(int receivedDamage)
+    private void OnEnable()
     {
-        if (receivedDamage >= _currentHealthPoints)
-        {
-            _currentHealthPoints = 0;
-            gameObject.SetActive(false);
-        }
-        else
-            _currentHealthPoints -= receivedDamage;
+        _health.Died += OnDying;
     }
 
-    public void TryHeal(int healthCount)
+    private void OnDisable()
     {
-        if (_maxHealth > _currentHealthPoints)
-            _currentHealthPoints += healthCount;
+        _health.Died -= OnDying;
     }
-
+    
+    private void OnDying() => gameObject.SetActive(false);
+    
     public void PickUpCoin() => _coinBag++;
+
+    public void TakeDamage(int amount)
+    {
+        if (Time.time < _invincibilityEndTime)
+            return;
+
+        _health.TakeDamage(amount);
+        _invincibilityEndTime = Time.time + _invincibilityTime;
+    }
+
+    public bool TryHeal(int amount)
+    {
+        if (_health.CurrentPoints + amount > _health.MaxPoints)
+            return false;
+
+        _health.TakeHeal(amount);
+        return true;
+    }
 }

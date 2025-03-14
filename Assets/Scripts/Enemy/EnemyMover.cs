@@ -1,25 +1,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerDectection))]
 public class EnemyMover : MonoBehaviour
 {
     [SerializeField] private List<Waypoint> _waypoints;
     [SerializeField] private float _speed = 3f;
     [SerializeField] private float _chasingSpeed = 5f;
+    [SerializeField] private PlayerDectection _detector;
 
     private readonly Quaternion _lookRight = Quaternion.identity;
     private readonly Quaternion _lookLeft = Quaternion.Euler(0, 180, 0);
+    private readonly float _distanceInaccuracy = 0.6f;
 
-    private PlayerDectection _detector;
     private int _currentWaypoint = 0;
-    private float _distanceInaccuracy = 0.6f;
     private bool _isChasing = false;
-
-    private void Awake()
-    {
-        _detector = GetComponent<PlayerDectection>();
-    }
 
     private void Update()
     {

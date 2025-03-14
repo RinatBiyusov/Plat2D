@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Enemy;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -7,26 +8,21 @@ using UnityEngine;
 [RequireComponent(typeof(InputPlayerReader), typeof(PlayerAnimationController))]
 public class PlayerAttack : MonoBehaviour
 {
-    [Header("Параметры атаки игрока:")]
     [SerializeField] private float _cooldownAttack = 0.5f;
     [SerializeField] private float _attackRange = 0.5f;
     [Range(1, 3)][SerializeField] private int _damage = 1;
     [SerializeField] private float _strengthKnockback = 2f;
     [SerializeField] private Transform _attackPoint;
     [SerializeField] private LayerMask _enemyLayers;
-
+    
     private InputPlayerReader _controller;
     private PlayerAnimationController _animationController;
-    private float lastAttackTime = 0f;
-    private float _attackDuration = 1f;
-    private bool _isAttacking = false;
-    private WaitForSeconds _waiting;
+    private float _lastAttackTime = 0f;
 
     private void Awake()
     {
         _controller = GetComponent<InputPlayerReader>();
         _animationController = GetComponent<PlayerAnimationController>();
-        _waiting = new WaitForSeconds(_attackDuration);
     }
 
     private void OnEnable()
@@ -41,7 +37,7 @@ public class PlayerAttack : MonoBehaviour
 
     private void Attack()
     {
-        if (Time.time < lastAttackTime + _cooldownAttack || _isAttacking)
+        if (Time.time < _lastAttackTime + _cooldownAttack)
             return;
 
         _animationController.TriggerAttack();
@@ -49,9 +45,7 @@ public class PlayerAttack : MonoBehaviour
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(_attackPoint.position, _attackRange, _enemyLayers);
 
         DealDamage(hitEnemies);
-        lastAttackTime = Time.time;
-
-        StartCoroutine(AttackRoutine());
+        _lastAttackTime = Time.time;
     }
 
     private void DealDamage(Collider2D[] hitEnemies)
@@ -76,13 +70,6 @@ public class PlayerAttack : MonoBehaviour
         directionKnockback.Normalize();
 
         enemy.AddForce(directionKnockback * _strengthKnockback, ForceMode2D.Impulse);
-    }
-
-    private IEnumerator AttackRoutine()
-    {
-        _isAttacking = true;
-        yield return _waiting;
-        _isAttacking = false;
     }
 
     private void OnDrawGizmos()
