@@ -1,35 +1,24 @@
+using System;
 using UnityEngine;
 
-[RequireComponent(typeof(Collectable))]
+[RequireComponent(typeof(Player))]
 public class CollectablesChecker : MonoBehaviour
 {
-    [SerializeField] private Player _player;
-
-    private Collectable _colletables;
+    private Player _player;
 
     private void Awake()
     {
-        _colletables = GetComponent<Collectable>();
+        _player = GetComponent<Player>();
     }
 
-    private void OnEnable()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        _colletables.WasCollect += PickUpCollectable;
-    }
-
-    private void OnDisable()
-    {
-        _colletables.WasCollect -= PickUpCollectable;
-    }
-
-    private void PickUpCollectable(Collectable collectable)
-    {
-        if (collectable.TryGetComponent(out Coin coin))
+        if (collision.TryGetComponent(out Coin coin))
         {
             _player.PickUpCoin();
             coin.Dispose();
         }
-        else if (collectable.TryGetComponent(out Apple apple))
+        else if (collision.TryGetComponent(out Apple apple))
         {
             if (_player.TryHeal(apple.AmountHealing))
                 apple.Dispose();

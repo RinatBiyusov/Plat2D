@@ -10,22 +10,22 @@ public class PlayerDectection : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.TryGetComponent(out Player player))
         {
             IsPlayerDetected = true;
-            PlayerPosition = collision.transform.position;
+            PlayerPosition = player.transform.position;
         }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
-            PlayerPosition = collision.transform.position;
+        if (collision.TryGetComponent(out Player player))
+            PlayerPosition = player.transform.position;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.TryGetComponent(out Player player))
             IsPlayerDetected = false;
     }
 }
