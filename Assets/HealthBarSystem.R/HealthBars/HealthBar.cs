@@ -8,17 +8,11 @@ public abstract class HealthBar : MonoBehaviour
 
     protected virtual void Awake()
     {
-        if (_health == null)
-            return;
-        
         _health.Changed += OnHealthChanged;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
-        if (_health == null)
-            return;
-
         _health.Changed -= OnHealthChanged;
     }
 

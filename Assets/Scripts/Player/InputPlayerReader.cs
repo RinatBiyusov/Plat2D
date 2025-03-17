@@ -10,6 +10,7 @@ public class InputPlayerReader : MonoBehaviour
 
     public event Action JumpPressed;
     public event Action AttackPressed;
+    public event Action AbilityPressed;
 
     private void Update()
     {
@@ -17,6 +18,13 @@ public class InputPlayerReader : MonoBehaviour
 
         AttackButtonClick();
         JumpButtonClick();
+        AbilityButtonCLick();
+    }
+
+    private void AbilityButtonCLick()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+            AbilityPressed?.Invoke();
     }
 
     private void AttackButtonClick()

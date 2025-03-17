@@ -17,10 +17,9 @@ public class HealthBarSliderSmooth : BaseSliders
 
     private IEnumerator ChangeSliderSmooth()
     {
-        while (!Mathf.Approximately(Slider.value, Health.CurrentPoints))
+        while (Mathf.Approximately(Slider.value, Health.CurrentPoints) == false)
         {
-            Slider.value =
-                Mathf.MoveTowards(Slider.value, Health.CurrentPoints, Time.deltaTime * _speedChangingHeath);
+            Slider.value = Mathf.MoveTowards(Slider.value, Health.CurrentPoints, Time.deltaTime * _speedChangingHeath);
 
             yield return null;
         }

@@ -1,8 +1,3 @@
-using System;
-using System.Collections;
-using Enemy;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(InputPlayerReader), typeof(PlayerAnimationController))]
@@ -10,7 +5,7 @@ public class PlayerAttack : MonoBehaviour
 {
     [SerializeField] private float _cooldownAttack = 0.5f;
     [SerializeField] private float _attackRange = 0.5f;
-    [Range(1, 3)][SerializeField] private int _damage = 1;
+    [Range(1, 3)][SerializeField] private float _damage = 1;
     [SerializeField] private float _strengthKnockback = 2f;
     [SerializeField] private Transform _attackPoint;
     [SerializeField] private LayerMask _enemyLayers;

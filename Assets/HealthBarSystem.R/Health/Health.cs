@@ -35,6 +35,9 @@ public class Health : MonoBehaviour
 
     public void TakeHeal(float heal)
     {
+        if (heal < 0)
+            return;
+
         if (CurrentPoints + heal >= _maxPoints)
             CurrentPoints = _maxPoints;
         else

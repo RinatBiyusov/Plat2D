@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     
     public void PickUpCoin() => _coinBag++;
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(float amount)
     {
         if (Time.time < _invincibilityEndTime)
             return;
@@ -37,11 +37,11 @@ public class Player : MonoBehaviour
         _invincibilityEndTime = Time.time + _invincibilityTime;
     }
 
-    public bool TryHeal(int amount)
+    public bool TryHeal(float amount)
     {
         if (_health.CurrentPoints + amount > _health.MaxPoints)
             return false;
-
+        
         _health.TakeHeal(amount);
         return true;
     }
