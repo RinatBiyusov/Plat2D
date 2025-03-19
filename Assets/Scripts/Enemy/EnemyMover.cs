@@ -1,18 +1,17 @@
 using System.Collections.Generic;
+using Enemy;
 using UnityEngine;
 
 public class EnemyMover : MonoBehaviour
 {
-    [SerializeField] private List<Waypoint> _waypoints;
-    [SerializeField] private float _speed = 3f;
-    [SerializeField] private float _chasingSpeed = 5f;
+    [SerializeField] private EnemyPatroller _patroller;
+    [SerializeField]  private EnemyChaser _chaser;
     [SerializeField] private PlayerDectection _detector;
-
+    [SerializeField] private EnemyFlipper _flipper;
+    
     private readonly Quaternion _lookRight = Quaternion.identity;
     private readonly Quaternion _lookLeft = Quaternion.Euler(0, 180, 0);
-    private readonly float _distanceInaccuracy = 0.6f;
 
-    private int _currentWaypoint = 0;
     private bool _isChasing = false;
 
     private void Update()
@@ -34,24 +33,16 @@ public class EnemyMover : MonoBehaviour
 
     private void Chase()
     {
-        Vector2 currentPosition = transform.position;
-        Vector2 targetPosition = new Vector2(_detector.PlayerPosition.x, currentPosition.y);
-
-        transform.position = Vector2.MoveTowards(currentPosition, targetPosition, _chasingSpeed * Time.deltaTime);
-
-        Flip(_detector.PlayerPosition);
+        _chaser.Chase(_detector.PlayerPosition);
+        _flipper.Flip(_detector.PlayerPosition);
     }
 
     private void Patrol()
     {
-        if (Vector2.SqrMagnitude(_waypoints[_currentWaypoint].Position - transform.position) < _distanceInaccuracy * _distanceInaccuracy)
-            _currentWaypoint = (_currentWaypoint + 1) % _waypoints.Count;
-
-        transform.position = Vector2.MoveTowards(transform.position, _waypoints[_currentWaypoint].Position, Time.deltaTime * _speed);
-
-        Flip(_waypoints[_currentWaypoint].Position);
+        _patroller.Patrol();
+        _flipper.Flip(_patroller.CurrentWaypointPosition);
     }
-
+    
     private void Flip(Vector2 position)
     {
         if (position.x - transform.position.x > 0)

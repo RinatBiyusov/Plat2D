@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(InputPlayerReader), typeof(PlayerAnimationController))]
+[RequireComponent(typeof(InputPlayerReader), typeof(PlayerAnimator))]
 public class PlayerAttack : MonoBehaviour
 {
     [SerializeField] private float _cooldownAttack = 0.5f;
@@ -11,13 +11,13 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private LayerMask _enemyLayers;
     
     private InputPlayerReader _controller;
-    private PlayerAnimationController _animationController;
+    private PlayerAnimator _animator;
     private float _lastAttackTime = 0f;
 
     private void Awake()
     {
         _controller = GetComponent<InputPlayerReader>();
-        _animationController = GetComponent<PlayerAnimationController>();
+        _animator = GetComponent<PlayerAnimator>();
     }
 
     private void OnEnable()
@@ -35,7 +35,7 @@ public class PlayerAttack : MonoBehaviour
         if (Time.time < _lastAttackTime + _cooldownAttack)
             return;
 
-        _animationController.TriggerAttack();
+        _animator.TriggerAttack();
 
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(_attackPoint.position, _attackRange, _enemyLayers);
 

@@ -12,13 +12,8 @@ public class Rotator : MonoBehaviour
     {
         _inputReader = GetComponent<InputPlayerReader>();
     }
-
-    private void Update()
-    {
-        RotateLogic();
-    }
-
-    private void RotateLogic()
+    
+    public void RotateLogic()
     {
         if (_inputReader.HorizontalInput < 0)
             gameObject.transform.rotation = _lookLeft;

@@ -1,3 +1,4 @@
+using Enemy;
 using UnityEngine;
 
 
@@ -5,7 +6,7 @@ public class Monster : MonoBehaviour
 {
     [Range(1, 3)] [SerializeField] private int _damage;
     [SerializeField] private float _strengthKnockback = 10f;
-
+    
     private Health _health;
 
     private void Awake()
