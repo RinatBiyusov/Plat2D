@@ -49,9 +49,8 @@ public class PlayerAttack : MonoBehaviour
         {
             if (enemy.TryGetComponent(out Monster monster))
                 monster.TakeDamage(_damage);
-
-            Rigidbody2D enemyRigidbody = enemy.GetComponent<Rigidbody2D>();
-            ApplyKnockback(enemyRigidbody);
+            
+            ApplyKnockback(monster.Rigidbody);
         }
     }
 

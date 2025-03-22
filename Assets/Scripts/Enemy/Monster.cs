@@ -6,11 +6,15 @@ public class Monster : MonoBehaviour
 {
     [Range(1, 3)] [SerializeField] private int _damage;
     [SerializeField] private float _strengthKnockback = 10f;
-    
-    private Health _health;
 
+    private Health _health;
+    private Rigidbody2D _rigidbody;
+
+    public Rigidbody2D Rigidbody => _rigidbody;
+    
     private void Awake()
     {
+        _rigidbody = GetComponent<Rigidbody2D>();
         _health = GetComponent<Health>();
     }
 
@@ -32,7 +36,7 @@ public class Monster : MonoBehaviour
             ApplyKnock(player);
         }
     }
-    
+
     private void OnDying() => gameObject.SetActive(false);
 
     private void ApplyKnock(Player player)
@@ -48,6 +52,6 @@ public class Monster : MonoBehaviour
 
         rigidbodyPlayer.AddForce(directionKnockback * _strengthKnockback, ForceMode2D.Impulse);
     }
-    
+
     public void TakeDamage(float receivedDamage) => _health.TakeDamage(receivedDamage);
 }

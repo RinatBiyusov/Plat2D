@@ -18,7 +18,8 @@ public class CooldownRenderer : MonoBehaviour
     private List<Color> _colors;
     private Slider _slider;
     private int _currentIndexColor = 0;
-
+    private Coroutine _coroutine;
+    
     private void Awake()
     {
         _slider = GetComponent<Slider>();
@@ -52,15 +53,15 @@ public class CooldownRenderer : MonoBehaviour
     {
         if (_vampirismAbility.IsActivated)
         {
-            StopAllCoroutines();
+            StopCoroutine(_coroutine);
 
-            StartCoroutine(ChangeSmoothCooldown(_slider.minValue, _vampirismAbility.DurationAbility));
+            _coroutine = StartCoroutine(ChangeSmoothCooldown(_slider.minValue, _vampirismAbility.DurationAbility));
         }
         else if (_vampirismAbility.IsOnCooldown)
         {
-            StopAllCoroutines();
+            StopCoroutine(_coroutine);
             
-            StartCoroutine(ChangeSmoothCooldown(_slider.maxValue, _vampirismAbility.DurationAbility));
+            _coroutine = StartCoroutine(ChangeSmoothCooldown(_slider.maxValue, _vampirismAbility.DurationAbility));
         }
     }
 
