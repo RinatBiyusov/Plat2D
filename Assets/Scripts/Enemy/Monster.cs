@@ -24,20 +24,18 @@ public class Monster : MonoBehaviour
         _health.Died -= OnDying;
     }
 
-    private void OnDying() => gameObject.SetActive(false);
-
-    public void TakeDamage(float receivedDamage) => _health.TakeDamage(receivedDamage);
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.TryGetComponent(out Player player))
         {
             player.TakeDamage(_damage);
-            ApplyKnock(player.transform);
+            ApplyKnock(player);
         }
     }
+    
+    private void OnDying() => gameObject.SetActive(false);
 
-    private void ApplyKnock(Transform player)
+    private void ApplyKnock(Player player)
     {
         if (player == null)
             return;
@@ -50,4 +48,6 @@ public class Monster : MonoBehaviour
 
         rigidbodyPlayer.AddForce(directionKnockback * _strengthKnockback, ForceMode2D.Impulse);
     }
+    
+    public void TakeDamage(float receivedDamage) => _health.TakeDamage(receivedDamage);
 }

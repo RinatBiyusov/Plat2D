@@ -42,12 +42,17 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        _rotator.RotateLogic();
-        _mover.Move();
+        Move();
     }
 
     private void OnDying() => gameObject.SetActive(false);
 
+    private void Move()
+    {
+        _mover.Move();
+        _rotator.RotateLogic(_inputPlayer.HorizontalInput);
+    }
+    
     private void Jump()
     {
         if (_groundedChecker.IsGrounded)

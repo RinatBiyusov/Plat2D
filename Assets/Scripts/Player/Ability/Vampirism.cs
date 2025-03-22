@@ -12,24 +12,36 @@ public class Vampirism : MonoBehaviour
     [SerializeField] private float _radiusAbility = 5f;
     [SerializeField] private float _timeTick = 0.5f;
     [SerializeField] private float _damagePerTick = 0.5f;
+
+    [SerializeField] private LayerMask _layerEnemy;
     
+    private int _enemysInAbilityRadius;
     private float _regenAmountPerTick;
     private WaitForSeconds _waitForSeconds;
+    private Collider2D[] _colliderEnemy = new Collider2D[10];
+    
+    public event Action AbilityStatusChanged;
 
     public bool IsOnCooldown { get; private set; } = false;
     public bool IsActivated { get; private set; } = false;
     public float TimeLastUse { get; private set; }
     public float DurationAbility => _durationAbility;
 
-    public event Action AbilityStatusChanged;
-    
     private void Awake()
     {
         _waitForSeconds = new WaitForSeconds(_timeTick);
     }
 
     private void Start() => _regenAmountPerTick = _damagePerTick * _ratioRegenHealthPerTick;
-    
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, _radiusAbility);
+    }
+
+    private bool CanBeActivated() => IsActivated || Time.time < TimeLastUse + _coolDownAbility;
+
     public void ActivateAbility(Player player)
     {
         if (TimeLastUse == 0)
@@ -46,21 +58,21 @@ public class Vampirism : MonoBehaviour
         }
     }
 
-    private bool CanBeActivated() => IsActivated || Time.time<TimeLastUse + _coolDownAbility;
-
     private IEnumerator DealDamagePerTick(Player player)
     {
         float elapsedTime = 0f;
         IsActivated = true;
         AbilityStatusChanged?.Invoke();
-        
+
         while (elapsedTime < _durationAbility)
         {
-            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, _radiusAbility);
+            _enemysInAbilityRadius = Physics2D.OverlapCircleNonAlloc(transform.position, _radiusAbility, _colliderEnemy, _layerEnemy);
 
-            foreach (Collider2D hit in hits)
+            for (int i = 0; i < _enemysInAbilityRadius; i++)
             {
-                if (hit.TryGetComponent(out Monster monster))
+                Collider2D hit = _colliderEnemy[i];
+                
+                if (hit && hit.TryGetComponent(out Monster monster))
                 {
                     monster.TakeDamage(_damagePerTick);
                     player.TryHeal(_regenAmountPerTick);
@@ -77,13 +89,7 @@ public class Vampirism : MonoBehaviour
         TimeLastUse = Time.time;
 
         AbilityStatusChanged?.Invoke();
-        
-        yield return null;
-    }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, _radiusAbility);
+        yield return null;
     }
 }

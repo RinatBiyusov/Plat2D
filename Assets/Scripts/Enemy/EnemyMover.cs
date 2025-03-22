@@ -6,8 +6,8 @@ public class EnemyMover : MonoBehaviour
 {
     [SerializeField] private EnemyPatroller _patroller;
     [SerializeField]  private EnemyChaser _chaser;
-    [SerializeField] private PlayerDectection _detector;
-    [SerializeField] private EnemyFlipper _flipper;
+    [SerializeField] private PlayerDectector _detector;
+    [SerializeField] private Rotator _rotator;
     
     private readonly Quaternion _lookRight = Quaternion.identity;
     private readonly Quaternion _lookLeft = Quaternion.Euler(0, 180, 0);
@@ -16,6 +16,8 @@ public class EnemyMover : MonoBehaviour
 
     private void Update()
     {
+        _detector.Detect();
+        
         if (_detector.IsPlayerDetected)
             StartChasing();
         else
@@ -34,20 +36,12 @@ public class EnemyMover : MonoBehaviour
     private void Chase()
     {
         _chaser.Chase(_detector.PlayerPosition);
-        _flipper.Flip(_detector.PlayerPosition);
+        _rotator.Flip(_detector.PlayerPosition);
     }
 
     private void Patrol()
     {
         _patroller.Patrol();
-        _flipper.Flip(_patroller.CurrentWaypointPosition);
-    }
-    
-    private void Flip(Vector2 position)
-    {
-        if (position.x - transform.position.x > 0)
-            transform.rotation = _lookRight;
-        else
-            transform.rotation = _lookLeft;
+        _rotator.Flip(_patroller.CurrentWaypointPosition);
     }
 }

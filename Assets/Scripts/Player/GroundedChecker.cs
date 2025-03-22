@@ -11,14 +11,6 @@ public class GroundedChecker : MonoBehaviour
         CheckingGrounded();
     }
 
-    private void CheckingGrounded()
-    {
-        if (_touchedGrounds > 0)
-            IsGrounded = true;
-        else
-            IsGrounded = false;
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.GetComponent<Ground>())
@@ -29,5 +21,13 @@ public class GroundedChecker : MonoBehaviour
     {
         if (collision.GetComponent<Ground>())
             _touchedGrounds--;
+    }
+    
+    private void CheckingGrounded()
+    {
+        if (_touchedGrounds > 0)
+            IsGrounded = true;
+        else
+            IsGrounded = false;
     }
 }

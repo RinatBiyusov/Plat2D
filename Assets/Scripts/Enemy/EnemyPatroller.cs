@@ -8,8 +8,8 @@ namespace Enemy
         [SerializeField] private List<Waypoint> _waypoints;
         [SerializeField] private float _speed = 3f;
         
-        private int _currentWaypoint = 0;
         private readonly float _distanceInaccuracy = 0.6f;
+        private int _currentWaypoint = 0;
         
         public Vector2 CurrentWaypointPosition { get; private set; }
         
@@ -22,6 +22,6 @@ namespace Enemy
             }
 
             transform.position = Vector2.MoveTowards(transform.position, _waypoints[_currentWaypoint].Position, Time.deltaTime * _speed);
-        }
+        } 
     }
 }

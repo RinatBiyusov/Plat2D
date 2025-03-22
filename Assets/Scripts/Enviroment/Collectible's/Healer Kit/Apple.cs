@@ -1,14 +1,15 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource), typeof(SpriteRenderer), typeof(Collider2D))]
-public class Apple : Collectable
+public class Apple : MonoBehaviour, ITakeable
 {
     private AudioSource _pickUpSound;
     private WaitForSeconds _delay;
     private SpriteRenderer _render;
     private Collider2D _collider;
-
+    
     public int AmountHealing { get; private set; } = 1;
 
     private void Awake()
@@ -19,11 +20,13 @@ public class Apple : Collectable
         _delay = new WaitForSeconds(_pickUpSound.clip.length);
     }
 
-    public void Dispose()
-    {
-        StartCoroutine(PlaySoundWithDelay());
-    }
+    public void Dispose() => StartCoroutine(PlaySoundWithDelay());
 
+    public void Accept(ItemInteractor itemInteractor)
+    {
+        itemInteractor.VisitApple(this);
+    }
+    
     private IEnumerator PlaySoundWithDelay()
     {
         _pickUpSound.Play();

@@ -1,23 +1,18 @@
 using UnityEngine;
 
-[RequireComponent(typeof(InputPlayerReader))]
 public class Rotator : MonoBehaviour
 {
     private readonly Quaternion _lookRight = Quaternion.identity;
     private readonly Quaternion _lookLeft = Quaternion.Euler(0, 180, 0);
 
-    private InputPlayerReader _inputReader;
-
-    private void Awake()
+    public void RotateLogic(float inputAxis)
     {
-        _inputReader = GetComponent<InputPlayerReader>();
-    }
-    
-    public void RotateLogic()
-    {
-        if (_inputReader.HorizontalInput < 0)
+        if (inputAxis < 0)
             gameObject.transform.rotation = _lookLeft;
-        else if (_inputReader.HorizontalInput > 0)
+        else if (inputAxis > 0)
             gameObject.transform.rotation = _lookRight;
     }
+
+    public void Flip(Vector2 position) =>
+        transform.rotation = position.x - transform.position.x > 0 ? _lookRight : _lookLeft;
 }

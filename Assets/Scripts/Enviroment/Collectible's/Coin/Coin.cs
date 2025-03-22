@@ -1,14 +1,15 @@
 using System.Collections;
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(AudioSource), typeof(SpriteRenderer), typeof(Collider2D))]
-public class Coin : Collectable
+public class Coin : MonoBehaviour, ITakeable
 {
     private AudioSource _pickUpSound;
     private WaitForSeconds _delay;
     private SpriteRenderer _render;
     private Collider2D _collider;
-
+    
     private void Awake()
     {
         _pickUpSound = GetComponent<AudioSource>();
@@ -16,11 +17,10 @@ public class Coin : Collectable
         _collider = GetComponent<Collider2D>();
         _delay = new WaitForSeconds(_pickUpSound.clip.length);
     }
-
-    public void Dispose()
-    {
-        StartCoroutine(PlaySoundWithDelay());
-    }
+    
+    public void Dispose() => StartCoroutine(PlaySoundWithDelay());
+    
+    public void Accept(ItemInteractor itemInteractor) => itemInteractor.VisitCoin(this);
 
     private IEnumerator PlaySoundWithDelay()
     {
